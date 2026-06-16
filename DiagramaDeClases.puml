@@ -1,0 +1,35 @@
+@startuml
+class RegistroClimatico {
+  - id: Long
+  - ubicacion: String
+  - temperaturaCelsius: Double
+  - humedadPorcentaje: Double
+  - descripcionClimatica: String
+  - fechaConsulta: LocalDateTime
+
+  + detalleCompleto(): String
+}
+
+class CriterioAlerta {
+  - temperaturaMinima: Double
+  - humedadMinima: Double
+
+  + seCumpleCon(registro: RegistroClimatico): boolean
+}
+
+class AlertaMeteorologica {
+  - id: Long
+  - registroClimatico: RegistroClimatico
+  - criterioAplicado: CriterioAlerta
+  - mensaje: String
+  - emailsDestinatarios: List<String>
+  - fechaGeneracion: LocalDateTime
+
+  + detalleParaCorreo(): String
+}
+
+CriterioAlerta ..> RegistroClimatico
+AlertaMeteorologica "1" --> "1" RegistroClimatico
+AlertaMeteorologica "1" --> "1" CriterioAlerta
+
+@enduml
