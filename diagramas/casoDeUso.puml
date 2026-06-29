@@ -1,0 +1,34 @@
+@startuml
+left to right direction
+
+actor "Scheduler / Tiempo" as Scheduler
+actor "WeatherAPI" as WeatherAPI
+actor "Servicio de correo" as MailService
+actor "Destinatario de alerta" as Destinatario
+
+rectangle "Climalert" {
+
+  usecase "Obtener datos climáticos actuales" as UC1
+  usecase "Registrar clima en histórico local" as UC2
+  usecase "Analizar último registro climático" as UC3
+  usecase "Detectar condición crítica" as UC4
+  usecase "Generar alerta meteorológica" as UC5
+  usecase "Enviar correo de alerta" as UC6
+  usecase "Recibir notificación de alerta" as UC7
+}
+
+Scheduler --> UC1
+Scheduler --> UC3
+
+UC1 --> WeatherAPI
+UC1 ..> UC2 : <<include>>
+
+UC3 ..> UC4 : <<include>>
+UC4 ..> UC5 : <<extend>>
+UC5 ..> UC6 : <<include>>
+
+UC6 --> MailService
+Destinatario --> UC7
+UC6 ..> UC7 : <<include>>
+
+@enduml

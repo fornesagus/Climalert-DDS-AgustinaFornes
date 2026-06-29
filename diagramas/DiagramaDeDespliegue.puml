@@ -1,0 +1,68 @@
+@startuml
+title Diagrama de Despliegue - Climalert
+left to right direction
+
+skinparam node {
+    BackgroundColor #D2E0EB
+    BorderColor #5B9BD5
+}
+skinparam component {
+    BackgroundColor #FCE4D6
+    BorderColor #E86D5E
+}
+skinparam database {
+    BackgroundColor #E2F0D9
+    BorderColor #70AD47
+}
+skinparam cloud {
+    BackgroundColor #EADCF8
+    BorderColor #8064A2
+}
+skinparam rectangle {
+    BorderColor #888888
+    FontStyle normal
+}
+
+' ===================== SISTEMA CLIMALERT =====================
+rectangle "Sistema Climalert" #line.dashed {
+
+    node "Servidor Climalert" as srvClimalert {
+        component "Servicio Climalert" as climalert
+        database "Base de Datos Local" as dbLocal
+    }
+}
+
+' ===================== SERVICIOS EXTERNOS =====================
+rectangle "Servicios externos" #line.dashed {
+
+    cloud "WeatherAPI" as weatherApi {
+        component "Endpoint /current.json" as currentJson
+    }
+
+    cloud "Proveedor de Correo" as proveedorCorreo {
+        component "Servidor SMTP" as smtp
+    }
+}
+
+' ===================== DESTINATARIOS =====================
+rectangle "Destinatarios" #line.dashed {
+
+   'node "Casillas de Correo" as casillas {
+   '     component "admin@clima.com" as admin
+   '     component "emergencias@clima.com" as emergencias
+   '     component "meteorologia@clima.com" as meteorologia
+   ' }
+   node "Casillas de Correo\nDestinatarios configurados" as correos
+}
+
+' ===================== RELACIONES =====================
+
+climalert -(0- currentJson : HTTPS - REST
+climalert -(0- dbLocal : Acceso a datos
+climalert -(0- smtp : SMTP
+'smtp -(0- admin : Email
+'smtp -(0- emergencias : Email
+'smtp -(0- meteorologia : Email
+smtp -(0- correos : Email
+
+@enduml
